@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
 		c = next;
 	}
 
-	parser.ParseProgram();
+	if (parser.ParseProgram() == 0)
+		cout << "Done: Parsed tokens!" << endl;
 
 	return 0;
 }

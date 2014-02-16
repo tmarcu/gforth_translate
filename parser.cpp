@@ -16,6 +16,7 @@ void Parser::AddToken(Token *t)
 {
 	tokstream.push_back(t);
 	iter = tokstream.begin();
+	tok = *iter;
 }
 
 void Parser::PrintTokens(void)
@@ -37,23 +38,36 @@ bool Parser::Expected(enum tokens t)
 		NextToken();
 		return 0;
 	} else {
-		std::cout << "Unexpected token" << std::endl;
 		return -1;
 	}
 }
 
-void Parser::ParseProgram(void)
+void Parser::ParseBinary(void)
 {
-	NextToken();
+	if (Expected(INT) == 0) {
+		if (Expected(INT) == 0)
+			std::cout << "addition" << std::endl;
+	}
+}
+
+bool Parser::ParseProgram(void)
+{
 	if (Expected(LBRACKET)) {
-		std::cerr << "Illegal Program start, missing '['" << std::endl;
+		std::cerr << "Error: Unexpected character, missing '['" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	std::cout << "success" << std::endl;
-	NextToken();
+
+	if (Expected(LBRACKET) == 0) {
+		ParseProgram();
+	}
+
+	if (Expected(MULTIPLY) == 0) {
+		ParseBinary();
+	}
 
 	if (Expected(RBRACKET)) {
-		std::cerr << "Error: Missing closing ']'" << std::endl;
+		std::cerr << "Error: Unexpected character, missing closing ']'" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	return 0;
 }

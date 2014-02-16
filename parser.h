@@ -16,7 +16,8 @@ public:
 	void PrintTokens(void);
 	void Print(void);
 	void AddToken(Token *t);
-	void ParseProgram(void);
+	bool ParseProgram(void);
+	void ParseBinary(void);
 	bool Expected(enum tokens t);
 private:
 	Token *tok;
