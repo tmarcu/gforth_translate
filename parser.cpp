@@ -42,32 +42,81 @@ bool Parser::Expected(enum tokens t)
 	}
 }
 
-void Parser::ParseBinary(void)
+struct node *Parser::BuildValueNode(Token *t)
 {
-	if (Expected(INT) == 0) {
-		if (Expected(INT) == 0)
-			std::cout << "addition" << std::endl;
-	}
+	struct node *n = new struct node;
+	n->data = t;
+	n->left = NULL;
+	n->right = NULL;
+
+	return n;
 }
 
-bool Parser::ParseProgram(void)
+struct node *Parser::BuildPlusExpr(Token **v)
 {
+	struct node *n = new struct node;
+	n->data = new Token(MULTIPLY);
+	n->left = BuildValueNode(v[0]);
+	n->right = BuildValueNode(v[1]);
+
+	return n;
+}
+
+struct node *Parser::ParseBinary(void)
+{
+	Token *values[2] = {NULL};
+	std::vector<Token *>::iterator it = iter;
+	std::cout <<" in binary" << std::endl;
+	if (Expected(INT) == 0) {
+		--it;
+		values[0] = *it;
+		++it;
+		if (Expected(INT) == 0) {
+			--it;
+			values[1] = *it;
+			++it;
+			std::cout << "returning plus expr " << values[1]->GetTag() << std::endl;
+			return BuildPlusExpr(values);
+		}
+	}
+
+	return NULL;
+}
+
+struct node *Parser::ProgramStart(void)
+{
+	struct node *return_val;
+
 	if (Expected(LBRACKET)) {
 		std::cerr << "Error: Unexpected character, missing '['" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
-	if (Expected(LBRACKET) == 0) {
-		ParseProgram();
-	}
-
-	if (Expected(MULTIPLY) == 0) {
-		ParseBinary();
-	}
+	return_val = ParseProgram();
 
 	if (Expected(RBRACKET)) {
 		std::cerr << "Error: Unexpected character, missing closing ']'" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	return 0;
+
+	std::cout << "DONE!" << std::endl;
+
+	return return_val;
+}
+
+struct node *Parser::ParseProgram(void)
+{
+	struct node *return_val = new struct node;
+
+	std::cout << "in parseprog" << std::endl;
+	/* Check for inner statements and recurse if any are found */
+	if (Expected(LBRACKET) == 0) {
+		return_val = ParseProgram();
+	} else if (Expected(MULTIPLY) == 0 || Expected(PLUS) == 0) {
+		return_val =  ParseBinary();
+	} /* Every statement MUST have an operator to start the
+	   * expression. i.e [* 1 2] = valid, [3 5] = INVALID */
+	std::cout <<" lol" << std::endl;
+
+	return return_val;
 }

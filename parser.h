@@ -8,6 +8,12 @@
 #include "token_list.h"
 #include "lexer.h"
 
+struct node {
+	struct Token *data;
+	struct node *left;
+	struct node *right;
+};
+
 class Parser {
 public:
 	Parser(void) {};
@@ -16,9 +22,13 @@ public:
 	void PrintTokens(void);
 	void Print(void);
 	void AddToken(Token *t);
-	bool ParseProgram(void);
-	void ParseBinary(void);
+	struct node *ProgramStart(void);
+	struct node *ParseProgram(void);
+	struct node *ParseBinary(void);
 	bool Expected(enum tokens t);
+
+	struct node *BuildValueNode(Token *t);
+	struct node *BuildPlusExpr(Token **v);
 private:
 	Token *tok;
 	std::vector<Token *> tokstream;

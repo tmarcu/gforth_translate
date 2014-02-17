@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
 		c = next;
 	}
 
-	if (parser.ParseProgram() == 0)
-		cout << "Done: Parsed tokens!" << endl;
+	struct node *list = parser.ProgramStart();
+	cout << list->data->GetTag() << " " << list->right->data->GetTag() << endl;
 
 	return 0;
 }
