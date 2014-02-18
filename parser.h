@@ -28,11 +28,11 @@ public:
 	bool Expected(enum tokens t);
 
 	struct node *BuildValueNode(Token *t);
-	struct node *BuildPlusExpr(Token **v);
+	struct node *BuildPlusExpr(struct node **v);
 private:
 	Token *tok;
 	std::vector<Token *> tokstream;
-	std::vector<Token *>::iterator iter;	
+	std::vector<Token *>::iterator iter;
 };
 
 #endif

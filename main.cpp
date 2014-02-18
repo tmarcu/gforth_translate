@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	}
 
 	struct node *list = parser.ProgramStart();
-	cout << list->data->GetTag() << " " << list->right->data->GetTag() << endl;
+	cout <<	list->data->GetTag() << " " << list->right->right->data->GetTag() << endl;
 
 	return 0;
 }

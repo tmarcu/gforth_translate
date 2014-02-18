@@ -52,30 +52,32 @@ struct node *Parser::BuildValueNode(Token *t)
 	return n;
 }
 
-struct node *Parser::BuildPlusExpr(Token **v)
+struct node *Parser::BuildPlusExpr(struct node **v)
 {
 	struct node *n = new struct node;
 	n->data = new Token(MULTIPLY);
-	n->left = BuildValueNode(v[0]);
-	n->right = BuildValueNode(v[1]);
-
+	n->left = v[0];
+	n->right = v[1];
 	return n;
 }
 
 struct node *Parser::ParseBinary(void)
 {
-	Token *values[2] = {NULL};
+	struct node *values[2] = {NULL};
 	std::vector<Token *>::iterator it = iter;
-	std::cout <<" in binary" << std::endl;
+
 	if (Expected(INT) == 0) {
 		--it;
-		values[0] = *it;
+		values[0] = BuildValueNode(*it);
 		++it;
 		if (Expected(INT) == 0) {
 			--it;
-			values[1] = *it;
+			values[1] = BuildValueNode(*it);
 			++it;
-			std::cout << "returning plus expr " << values[1]->GetTag() << std::endl;
+			return BuildPlusExpr(values);
+		} else if (Expected(LBRACKET) == 0) {
+			std::cout << "entering 1 + expr" << std::endl;
+			values[1] = ParseProgram();
 			return BuildPlusExpr(values);
 		}
 	}
@@ -108,7 +110,6 @@ struct node *Parser::ParseProgram(void)
 {
 	struct node *return_val = new struct node;
 
-	std::cout << "in parseprog" << std::endl;
 	/* Check for inner statements and recurse if any are found */
 	if (Expected(LBRACKET) == 0) {
 		return_val = ParseProgram();
@@ -116,7 +117,6 @@ struct node *Parser::ParseProgram(void)
 		return_val =  ParseBinary();
 	} /* Every statement MUST have an operator to start the
 	   * expression. i.e [* 1 2] = valid, [3 5] = INVALID */
-	std::cout <<" lol" << std::endl;
 
 	return return_val;
 }
