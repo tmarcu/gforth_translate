@@ -24,13 +24,16 @@ public:
 	void AddToken(Token *t);
 	struct node *ProgramStart(void);
 	struct node *ParseProgram(void);
+	struct node *ParseUnary(enum tokens type);
 	struct node *ParseBinary(enum tokens type);
+	struct node *ParseStmnt(enum tokens type);
 	bool Expected(enum tokens t);
 
 	struct node *BuildValueNode(Token *t);
-	struct node *BuildBinaryExpr(struct node **v);
+	struct node *BuildBinaryExpr(struct node **v, enum tokens type);
 private:
 	Token *tok;
+	Token *prevtoken;
 	std::vector<Token *> tokstream;
 	std::vector<Token *>::iterator iter;
 };

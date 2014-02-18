@@ -8,6 +8,7 @@
 
 void Parser::NextToken(void)
 {
+	prevtoken = tok;
 	tok = *iter;
 	++iter;
 }
@@ -52,10 +53,10 @@ struct node *Parser::BuildValueNode(Token *t)
 	return n;
 }
 
-struct node *Parser::BuildBinaryExpr(struct node **v)
+struct node *Parser::BuildBinaryExpr(struct node **v, enum tokens type)
 {
 	struct node *n = new struct node;
-	n->data = new Token(MULTIPLY);
+	n->data = new Token(type);
 	n->left = v[0];
 	n->right = v[1];
 	return n;
@@ -64,21 +65,51 @@ struct node *Parser::BuildBinaryExpr(struct node **v)
 struct node *Parser::ParseBinary(enum tokens type)
 {
 	struct node *values[2] = {NULL};
-	std::vector<Token *>::iterator it = iter;
 
+	/* Handle binary math expressions */
 	if (Expected(INT) == 0) {
-		--it;
-		values[0] = BuildValueNode(*it);
-		++it;
+		values[0] = BuildValueNode(prevtoken);
 		if (Expected(INT) == 0) {
-			--it;
-			values[1] = BuildValueNode(*it);
-			++it;
-			return BuildBinaryExpr(values);
+			values[1] = BuildValueNode(prevtoken);
+			return BuildBinaryExpr(values, type);
 		} else if (Expected(LBRACKET) == 0) {
 			values[1] = ParseProgram();
-			return BuildBinaryExpr(values);
+			return BuildBinaryExpr(values, type);
 		}
+	}
+
+	/* Handle assignment */
+	if (type == EQUAL) {
+		if (Expected(NAME) == 0) {
+			values[0] = BuildValueNode(prevtoken);
+			if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
+			    Expected(STRING) == 0) {
+				values[1] = BuildValueNode(prevtoken);
+				return BuildBinaryExpr(values, type);
+			} else if (Expected(LBRACKET) == 0) {
+				values[1] = ParseProgram();
+				return BuildBinaryExpr(values, type);
+			}
+		}
+	}
+
+	return NULL;
+}
+
+struct node *Parser::ParseStmnt(enum tokens type)
+{
+	std::cout << "caught statement" << std::endl;
+}
+
+struct node *Parser::ParseUnary(enum tokens type)
+{
+	struct node *values[2] = {NULL};
+
+	if (Expected(INT) == 0) {
+		values[1] = BuildValueNode(prevtoken);
+	} else if (Expected(LBRACKET) == 0) {
+			values[1] = ParseProgram();
+			return BuildBinaryExpr(values, type);
 	}
 
 	return NULL;
@@ -100,7 +131,7 @@ struct node *Parser::ProgramStart(void)
 		exit(EXIT_FAILURE);
 	}
 
-	std::cout << "DONE!" << std::endl;
+	std::cout << "DONE PARSING!" << std::endl;
 
 	return return_val;
 }
@@ -108,8 +139,6 @@ struct node *Parser::ProgramStart(void)
 struct node *Parser::ParseProgram(void)
 {
 	struct node *return_val = new struct node;
-	auto it = iter;
-	auto prevtok = tok; /* To pass the correct operator to ParseBinary */
 
 	/* Check for inner statements and recurse if any are found */
 	if (Expected(LBRACKET) == 0) {
@@ -119,11 +148,11 @@ struct node *Parser::ParseProgram(void)
 			Expected(COMPARE) == 0 || Expected(POWER) == 0 ||
 			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
 			|| Expected(LESSTHAN) == 0) {
-		--it;
-		prevtok = *it;
-		return_val =  ParseBinary(prevtok->GetTag());
-	} /* Every statement MUST have an operator to start the
-	   * expression. i.e [* 1 2] = valid, [3 5] = INVALID */
+		return_val =  ParseBinary(prevtoken->GetTag());
+	}  else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
+			Expected(COS) == 0 || Expected(TAN) == 0) {
+		return_val = ParseUnary(prevtoken->GetTag());
+	}
 
 	return return_val;
 }

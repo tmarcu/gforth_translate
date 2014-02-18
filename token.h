@@ -12,6 +12,7 @@ public:
 	Token(enum tokens tag);
 	void SetTag(enum tokens tag);
 	enum tokens GetTag(void) { return tag;};
+	virtual float GetValue(void) { return 0;};
 
 private:
 	enum tokens tag;

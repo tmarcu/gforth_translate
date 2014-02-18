@@ -9,6 +9,25 @@
 
 using namespace std;
 
+static void postorder(struct node *n)
+{
+	if (n != NULL) {
+		postorder(n->left);
+		postorder(n->right);
+		cout << n->data->GetTag() << " " << endl;
+	}
+}
+
+static void inorder(struct node *n)
+{
+	if (n != NULL) {
+		inorder(n->left);
+		cout << n->data->GetTag() << " " << endl;
+		inorder(n->right);
+	}
+}
+
+
 int main(int argc, char *argv[])
 {
 	string input;
@@ -29,7 +48,14 @@ int main(int argc, char *argv[])
 	}
 
 	struct node *list = parser.ProgramStart();
-	cout <<	list->data->GetTag() << " " << list->right->right->data->GetTag() << endl;
+
+	cout << "Postorder: " << endl;
+
+	postorder(list);
+
+	cout << "Inorder: " << endl;
+
+	inorder(list);
 
 	return 0;
 }
