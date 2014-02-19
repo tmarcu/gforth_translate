@@ -1,0 +1,13 @@
+Keywords
+Identifiers
+	Function, Variable
+Numbers
+	Int, Float, Double
+Strings
+Statements
+	if, else, while, let, print
+Operators
+	Unary, Binary, Tertiary
+Comments
+Closures
+	Parenthesis, Brackets, Braces
