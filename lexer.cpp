@@ -232,6 +232,10 @@ void Lexer::CreateTable(void)
 	idhashtable.emplace("and", AND);
 	idhashtable.emplace("sin", SIN);
 	idhashtable.emplace("cos", COS);
+	idhashtable.emplace("int", INT);
+	idhashtable.emplace("float", FLOAT);
+	idhashtable.emplace("string", STRING);
+	idhashtable.emplace("bool", BOOL);
 	idhashtable.emplace("tan", TAN);
 	idhashtable.emplace("print", PRINT);
 }

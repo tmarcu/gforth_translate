@@ -67,7 +67,8 @@ struct node *Parser::ParseBinary(enum tokens type)
 	struct node *values[2] = {NULL};
 
 	/* Handle binary math expressions */
-	if (Expected(INT) == 0) {
+	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
+	    Expected(NAME) == 0) {
 		values[0] = BuildValueNode(prevtoken);
 		if (Expected(INT) == 0) {
 			values[1] = BuildValueNode(prevtoken);
@@ -96,10 +97,10 @@ struct node *Parser::ParseBinary(enum tokens type)
 	return NULL;
 }
 
-struct node *Parser::ParseStmnt(enum tokens type)
+struct node *Parser::CheckIf(enum tokens type)
 {
-	std::cout << "caught statement" << std::endl;
 	struct node *values[2] = {NULL};
+	struct node *return_val;
 
 	if (Expected(LBRACKET) == 0) {
 		values[0] = ParseProgram();
@@ -109,14 +110,135 @@ struct node *Parser::ParseStmnt(enum tokens type)
 			std::cerr << "Error: Missing closing ']' in expr" << std::endl;
 			return NULL;
 		}
-	}
-	
-	/* Handle second expression */
-	if (Expected(LBRACKET) == 0) {
-		values[1] = ParseProgram();
-		return BuildBinaryExpr(values, type);
+
+		/* Handle second expression */
+		if (Expected(LBRACKET) == 0) {
+			values[1] = ParseProgram();
+			return_val = BuildBinaryExpr(values, type);
+
+			if (Expected(RBRACKET)) {
+				std::cerr << "Error: Missing closing ']' in expr" << std::endl;
+				return NULL;
+			}
+		}
+
+		if (Expected(LBRACKET) == 0) {
+			return_val->mid = ParseProgram();
+		}
+
+		return return_val;
 	}
 
+	return NULL;
+}
+
+struct node *Parser::CheckWhile(enum tokens type)
+{
+	struct node *values[2] = {NULL};
+	struct node *return_val;
+
+	if (Expected(LBRACKET) == 0) {
+		values[0] = ParseProgram();
+
+		/* Expression should be closed, end w/error otherwise */
+		if (Expected(RBRACKET)) {
+			std::cerr << "Error: Missing closing ']' in expr" << std::endl;
+			return NULL;
+		}
+
+		/* Handle second expression */
+		if (Expected(LBRACKET) == 0) {
+			values[1] = ParseProgram();
+			return_val = BuildBinaryExpr(values, type);
+
+			if (Expected(RBRACKET)) {
+				std::cerr << "Error: Missing closing ']' in expr" << std::endl;
+				return NULL;
+			}
+		}
+
+		/* Handle expression lists and keep iterating */
+		while (Expected(LBRACKET) == 0) {
+			std::cout << "new expr" << std::endl;
+			return_val->mid = ParseProgram();
+		}
+
+		return return_val;
+	}
+
+	return NULL;
+}
+
+struct node *Parser::CheckVarExpr(enum tokens type)
+{
+	struct node *values[2] = {NULL};
+	struct node *return_val = NULL;
+
+	if (Expected(LBRACKET)) {
+			std::cerr << "Error: Missing '[' after 'let'" << std::endl;
+			exit(EXIT_FAILURE);
+	}
+
+	/* The first part of varlist should be name */
+	if (Expected(NAME)) {
+		std::cerr << "Error: Missing variable" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	values[0] = BuildValueNode(prevtoken);
+
+	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
+	    Expected(BOOL) == 0 || Expected(STRING) == 0) {
+		values[1] = BuildValueNode(prevtoken);
+		return_val = BuildBinaryExpr(values, LET);
+	}
+
+	if (Expected(RBRACKET)) {
+		std::cout <<"Error: Missing closing ']' after varlist" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	return return_val;
+}
+
+struct node *Parser::CheckLet(enum tokens type)
+{
+	struct node *return_val;
+
+	if (Expected(LBRACKET) == 0) {
+		return_val = CheckVarExpr(type);
+
+		if (Expected(RBRACKET)) {
+			std::cout <<"Error: Missing closing ']' after varlist" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		
+
+		return return_val;
+	}
+
+	return NULL;
+}
+
+struct node *Parser::ParseStmnt(enum tokens type)
+{
+	struct node *values[2] = {NULL};
+	struct node *return_val = NULL;
+
+	switch(type) {
+	case IF:
+		return_val = CheckIf(type);
+	break;
+	case WHILE:
+		return_val = CheckWhile(type);
+	break;
+	case LET:
+		return_val = CheckLet(type);
+	break;
+	default:
+	break;
+	}
+	
 	if (Expected(INT) == 0 || Expected(FLOAT) == 0 || Expected(NAME) == 0) {
 		values[0] = BuildValueNode(prevtoken);
 		if (Expected(INT) == 0 || Expected(FLOAT) == 0 || Expected(NAME) == 0) {
@@ -125,7 +247,7 @@ struct node *Parser::ParseStmnt(enum tokens type)
 		}
 	}
 
-	return NULL;
+	return return_val;
 }
 
 struct node *Parser::ParseUnary(enum tokens type)
@@ -182,6 +304,10 @@ struct node *Parser::ParseProgram(void)
 	} else if (Expected(IF) == 0 || Expected(WHILE) == 0 ||
 			Expected(LET) == 0 || Expected(PRINT) == 0) {
 		return_val = ParseStmnt(prevtoken->GetTag());
+	} else if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
+			Expected(NAME) == 0) {
+		if (tok->GetTag() == RBRACKET)
+			return BuildValueNode(prevtoken);
 	}
 
 	return return_val;

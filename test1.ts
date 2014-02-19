@@ -1,1 +1,1 @@
-[[while [> 4 3][= x 4]]]
+[[let[[result int]]]]

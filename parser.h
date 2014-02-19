@@ -12,6 +12,7 @@ struct node {
 	struct Token *data;
 	struct node *left;
 	struct node *right;
+	struct node *mid;
 };
 
 class Parser {
@@ -22,15 +23,21 @@ public:
 	void PrintTokens(void);
 	void Print(void);
 	void AddToken(Token *t);
+
 	struct node *ProgramStart(void);
 	struct node *ParseProgram(void);
 	struct node *ParseUnary(enum tokens type);
 	struct node *ParseBinary(enum tokens type);
 	struct node *ParseStmnt(enum tokens type);
-	bool Expected(enum tokens t);
+	struct node *CheckIf(enum tokens type);
+	struct node *CheckWhile(enum tokens type);
+	struct node *CheckLet(enum  tokens type);
+	struct node *CheckVarExpr(enum tokens type);
 
 	struct node *BuildValueNode(Token *t);
 	struct node *BuildBinaryExpr(struct node **v, enum tokens type);
+	bool Expected(enum tokens t);
+
 private:
 	Token *tok;
 	Token *prevtoken;
