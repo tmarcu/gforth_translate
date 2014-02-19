@@ -46,6 +46,10 @@ Token *Lexer::CheckUnaryOp(const char &c)
 			return new Operator(PLUS);
 		case '-':
 			return new Operator(MINUS);
+		case '>':
+			return new Operator(GREATERTHAN);
+		case '<':
+			return new Operator(LESSTHAN);
 		default:
 			return new Token(ERROR);
 	}

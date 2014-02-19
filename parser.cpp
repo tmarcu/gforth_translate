@@ -99,6 +99,26 @@ struct node *Parser::ParseBinary(enum tokens type)
 struct node *Parser::ParseStmnt(enum tokens type)
 {
 	std::cout << "caught statement" << std::endl;
+	struct node *values[2] = {NULL};
+
+	if (Expected(LBRACKET) == 0) {
+		values[0] = ParseProgram();
+	}
+
+	/* Expression should be closed, end w/error otherwise */
+	if (Expected(RBRACKET)) {
+		std::cerr << "Error: Missing closing ']' in expr" << std::endl;
+		return NULL;
+	}
+	
+	/* Handle second expression */
+	if (Expected(LBRACKET) == 0) {
+		std::cout << "D:LFKJSD:LKDSJF:LSDKJ SD" << std::endl;
+		values[1] = ParseProgram();
+		return BuildBinaryExpr(values, type);
+	}
+
+	return NULL;
 }
 
 struct node *Parser::ParseUnary(enum tokens type)
@@ -149,9 +169,12 @@ struct node *Parser::ParseProgram(void)
 			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
 			|| Expected(LESSTHAN) == 0) {
 		return_val =  ParseBinary(prevtoken->GetTag());
-	}  else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
+	} else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
 			Expected(COS) == 0 || Expected(TAN) == 0) {
 		return_val = ParseUnary(prevtoken->GetTag());
+	} else if (Expected(IF) == 0 || Expected(WHILE) == 0 ||
+			Expected(LET) == 0 || Expected(PRINT) == 0) {
+		return_val = ParseStmnt(prevtoken->GetTag());
 	}
 
 	return return_val;
