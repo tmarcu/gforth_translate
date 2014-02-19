@@ -18,12 +18,12 @@ static void postorder(struct node *n)
 	}
 }
 
-static void inorder(struct node *n)
+static void preorder(struct node *n)
 {
 	if (n != NULL) {
-		inorder(n->left);
 		cout << n->data->GetTag() << " " << endl;
-		inorder(n->right);
+		preorder(n->left);
+		preorder(n->right);
 	}
 }
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
 	cout << "Inorder: " << endl;
 
-	inorder(list);
+	preorder(list);
 
 	return 0;
 }

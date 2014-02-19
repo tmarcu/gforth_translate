@@ -228,6 +228,7 @@ void Lexer::CreateTable(void)
 	idhashtable.emplace("if", IF);
 	idhashtable.emplace("let", LET);
 	idhashtable.emplace("or", OR);
+	idhashtable.emplace("while", WHILE);
 	idhashtable.emplace("and", AND);
 	idhashtable.emplace("sin", SIN);
 	idhashtable.emplace("cos", COS);

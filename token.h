@@ -13,6 +13,7 @@ public:
 	void SetTag(enum tokens tag);
 	enum tokens GetTag(void) { return tag;};
 	virtual float GetValue(void) { return 0;};
+	std::string GetName(void);
 
 private:
 	enum tokens tag;

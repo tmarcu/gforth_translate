@@ -103,19 +103,26 @@ struct node *Parser::ParseStmnt(enum tokens type)
 
 	if (Expected(LBRACKET) == 0) {
 		values[0] = ParseProgram();
-	}
 
-	/* Expression should be closed, end w/error otherwise */
-	if (Expected(RBRACKET)) {
-		std::cerr << "Error: Missing closing ']' in expr" << std::endl;
-		return NULL;
+		/* Expression should be closed, end w/error otherwise */
+		if (Expected(RBRACKET)) {
+			std::cerr << "Error: Missing closing ']' in expr" << std::endl;
+			return NULL;
+		}
 	}
 	
 	/* Handle second expression */
 	if (Expected(LBRACKET) == 0) {
-		std::cout << "D:LFKJSD:LKDSJF:LSDKJ SD" << std::endl;
 		values[1] = ParseProgram();
 		return BuildBinaryExpr(values, type);
+	}
+
+	if (Expected(INT) == 0 || Expected(FLOAT) == 0 || Expected(NAME) == 0) {
+		values[0] = BuildValueNode(prevtoken);
+		if (Expected(INT) == 0 || Expected(FLOAT) == 0 || Expected(NAME) == 0) {
+			values[1] = BuildValueNode(prevtoken);
+			return BuildBinaryExpr(values, type);
+		}
 	}
 
 	return NULL;
