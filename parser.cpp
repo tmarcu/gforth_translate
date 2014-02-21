@@ -52,7 +52,7 @@ struct node *Parser::BuildValueNode(Token *t)
 	return n;
 }
 
-struct node *Parser::BuildPlusExpr(struct node **v)
+struct node *Parser::BuildBinaryExpr(struct node **v)
 {
 	struct node *n = new struct node;
 	n->data = new Token(MULTIPLY);
@@ -61,7 +61,7 @@ struct node *Parser::BuildPlusExpr(struct node **v)
 	return n;
 }
 
-struct node *Parser::ParseBinary(void)
+struct node *Parser::ParseBinary(enum tokens type)
 {
 	struct node *values[2] = {NULL};
 	std::vector<Token *>::iterator it = iter;
@@ -74,11 +74,10 @@ struct node *Parser::ParseBinary(void)
 			--it;
 			values[1] = BuildValueNode(*it);
 			++it;
-			return BuildPlusExpr(values);
+			return BuildBinaryExpr(values);
 		} else if (Expected(LBRACKET) == 0) {
-			std::cout << "entering 1 + expr" << std::endl;
 			values[1] = ParseProgram();
-			return BuildPlusExpr(values);
+			return BuildBinaryExpr(values);
 		}
 	}
 
@@ -109,12 +108,20 @@ struct node *Parser::ProgramStart(void)
 struct node *Parser::ParseProgram(void)
 {
 	struct node *return_val = new struct node;
+	auto it = iter;
+	auto prevtok = tok; /* To pass the correct operator to ParseBinary */
 
 	/* Check for inner statements and recurse if any are found */
 	if (Expected(LBRACKET) == 0) {
 		return_val = ParseProgram();
-	} else if (Expected(MULTIPLY) == 0 || Expected(PLUS) == 0) {
-		return_val =  ParseBinary();
+	} else if (Expected(MULTIPLY) == 0 || Expected(PLUS) == 0 ||
+			Expected(MINUS) == 0|| Expected(DIVIDE) == 0 ||
+			Expected(COMPARE) == 0 || Expected(POWER) == 0 ||
+			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
+			|| Expected(LESSTHAN) == 0) {
+		--it;
+		prevtok = *it;
+		return_val =  ParseBinary(prevtok->GetTag());
 	} /* Every statement MUST have an operator to start the
 	   * expression. i.e [* 1 2] = valid, [3 5] = INVALID */
 
