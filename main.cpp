@@ -18,12 +18,24 @@ static void postorder(struct node *n)
 	}
 }
 
-static void preorder(struct node *n)
+static void preorder(struct node *n, char pos)
 {
 	if (n != NULL) {
-		cout << n->data->GetTag() << " " << endl;
-		preorder(n->left);
-		preorder(n->right);
+		if (pos == 'l')
+			cout << "[" << n->data->GetTag() << "]";
+		else if (pos == 'r')
+			cout << "\t\t[" << n->data->GetTag() << "]" << endl;
+		else
+			cout << "\t[" << n->data->GetTag() << "]" << endl;
+
+		if (n->right != NULL && (n->right->left != NULL || n->right->right != NULL)) {
+			preorder(n->left, 'l');
+			preorder(n->right, 'b');
+		} else {
+			preorder(n->left, 'l');
+			preorder(n->right, 'r');
+		}
+
 	}
 }
 
@@ -53,9 +65,9 @@ int main(int argc, char *argv[])
 
 	postorder(list);
 
-	cout << "Inorder: " << endl;
+	cout << "Preorder (Tree Diagram): " << endl;
 
-	preorder(list);
+	preorder(list, 'b');
 
 	return 0;
 }
