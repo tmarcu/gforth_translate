@@ -22,11 +22,11 @@ static void preorder(struct node *n, char pos)
 {
 	if (n != NULL) {
 		if (pos == 'l')
-			cout << "[" << n->data->GetTag() << "]";
+			cout << "[" << n->data->GetName() << "]";
 		else if (pos == 'r')
-			cout << "\t\t[" << n->data->GetTag() << "]" << endl;
+			cout << "\t\t[" << n->data->GetName() << "]" << endl;
 		else
-			cout << "\t[" << n->data->GetTag() << "]" << endl;
+			cout << "\t[" << n->data->GetName() << "]" << endl;
 
 		if (n->right != NULL && (n->right->left != NULL || n->right->right != NULL)) {
 			preorder(n->left, 'l');
