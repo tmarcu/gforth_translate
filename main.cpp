@@ -21,16 +21,29 @@ static void postorder(struct node *n)
 static void preorder(struct node *n, char pos)
 {
 	if (n != NULL) {
-		if (pos == 'l')
+		if (pos == 'l') {
+			if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
+				cout << "[" << n->data->GetValue() << "]";
+
 			cout << "[" << n->data->GetName() << "]";
-		else if (pos == 'r')
+		} else if (pos == 'r') {
+			if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
+				cout << "[" << n->data->GetValue() << "]";
+
 			cout << "\t\t[" << n->data->GetName() << "]" << endl;
-		else
+		} else {
+			if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
+				cout << "[" << n->data->GetValue() << "]";
+
 			cout << "\t[" << n->data->GetName() << "]" << endl;
+		}
 
 		if (n->right != NULL && (n->right->left != NULL || n->right->right != NULL)) {
 			preorder(n->left, 'l');
 			preorder(n->right, 'b');
+		} else if (n->left != NULL && (n->left->left != NULL || n->left->right != NULL)) {
+			preorder(n->left, 'b');
+			preorder(n->right, 'r');
 		} else {
 			preorder(n->left, 'l');
 			preorder(n->right, 'r');
