@@ -82,7 +82,7 @@ std::string Token::GetName(void)
 	case BOOL:
 		return "bool";
 	case NAME:
-		return "name";
+		return this->GetString();
 	case LBRACKET:
 		return "[";
 	case RBRACKET:

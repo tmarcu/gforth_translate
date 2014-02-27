@@ -13,6 +13,7 @@ public:
 	void SetTag(enum tokens tag);
 	enum tokens GetTag(void) { return tag;};
 	virtual float GetValue(void) { return 0;};
+	virtual std::string GetString(void) { return NULL;};
 	std::string GetName(void);
 
 private:
@@ -69,7 +70,7 @@ public:
 		name  = identifier;
 	}
 
-	std::string GetName(void) { return name;};
+	std::string GetString(void) { return name;};
 
 private:
 	std::string name;

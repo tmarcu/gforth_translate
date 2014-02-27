@@ -14,7 +14,15 @@ static void postorder(struct node *n)
 	if (n != NULL) {
 		postorder(n->left);
 		postorder(n->right);
-		cout << n->data->GetTag() << " " << endl;
+		switch (n->data->GetTag()) {
+		case INT:
+		case FLOAT:
+			cout << n->data->GetValue() << " ";
+		break;
+		default:
+			cout << n->data->GetName() << " ";
+		break;			
+		}
 	}
 }
 
@@ -77,6 +85,8 @@ int main(int argc, char *argv[])
 	cout << "Postorder: " << endl;
 
 	postorder(list);
+
+	cout << endl;
 
 	cout << "Preorder (Tree Diagram): " << endl;
 
