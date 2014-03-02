@@ -70,7 +70,7 @@ struct node *Parser::ParseBinary(enum tokens type)
 	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
 	    Expected(NAME) == 0) {
 		values[0] = BuildValueNode(prevtoken);
-		if (Expected(INT) == 0) {
+		if (Expected(INT) == 0 || Expected(FLOAT) == 0) {
 			values[1] = BuildValueNode(prevtoken);
 			return BuildBinaryExpr(values, type);
 		} else if (Expected(LBRACKET) == 0) {

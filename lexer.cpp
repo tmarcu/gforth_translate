@@ -206,7 +206,10 @@ Token *Lexer::ScanToken(char &c, char &next)
 		case '*':
 		case '+':
 		case '-':
+		case ':':
 			return (check_binary_ops(c, next));
+		break;
+		default:
 		break;
 	}
 
@@ -218,6 +221,9 @@ Token *Lexer::ScanToken(char &c, char &next)
 
 	if (c == '"')
 		return CheckString(c, next);
+
+	if (c == -1)
+		return new Token(END);
 
 	/* Shouldn't ever reach this if all funcs return a token */
 	return new Token(ERROR);	
