@@ -116,10 +116,15 @@ Token *Lexer::GetNum(const char &c, char &next)
 		num += next;
 		next = readchar();
 
-		while(isdigit(next)) {
+		while(next != 'e' && isdigit(next)) {
 			num += next;
 			next = readchar();
 		}
+	}
+
+	if (next == 'e') {
+		isfloat = true;
+		next = readchar();
 	}
 		
 	if (isfloat == true)
@@ -209,6 +214,8 @@ Token *Lexer::ScanToken(char &c, char &next)
 		case ':':
 			return (check_binary_ops(c, next));
 		break;
+		case '.':
+			return GetNum(c, next);
 		default:
 		break;
 	}

@@ -9,7 +9,9 @@
 
 using namespace std;
 
-static void postorder(struct node *n)
+bool tofloat = false;
+
+static int postorder(struct node *n)
 {
 	if (n != NULL) {
 		postorder(n->left);
@@ -17,6 +19,10 @@ static void postorder(struct node *n)
 		switch (n->data->GetTag()) {
 		case INT:
 		case FLOAT:
+			if (tofloat != true) {
+				tofloat = true;
+				return 1;
+			}
 			cout << n->data->GetValue() << " ";
 		break;
 		default:
@@ -66,6 +72,7 @@ int main(int argc, char *argv[])
 	string input;
 	char c;
 	char next;
+	int i = 0;
 	Token *tok;
 	Lexer scanner = Lexer();
 	Parser parser = Parser();
@@ -84,7 +91,11 @@ int main(int argc, char *argv[])
 
 	cout << "Postorder: " << endl;
 
-	postorder(list);
+	while (postorder(list) != 0) {
+		++i;
+		cout << "pass: " << i<< endl;
+		postorder(list);
+	}
 
 	cout << endl;
 
