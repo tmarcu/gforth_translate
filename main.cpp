@@ -4,8 +4,6 @@
  */
 
 #include <iostream>
-#include <list>
-#include <algorithm>
 
 #include "token.h"
 #include "token_list.h"
@@ -18,56 +16,63 @@ bool tofloat = false;
 
 static int postorder(struct node *n)
 {
-	if (n != NULL) {
-		postorder(n->left);
-		postorder(n->right);
-		switch (n->data->GetTag()) {
-		case INT:
-		case FLOAT:
-			if (tofloat != true) {
-				tofloat = true;
-				return 1;
-			}
+	if (n == NULL)
+		return -1;
+
+	postorder(n->left);
+	postorder(n->right);
+
+	switch (n->data->GetTag()) {
+	case INT:
+		cout << n->data->GetValue() << " ";
+	break;
+	case FLOAT:
+		if (tofloat != true) {
+			tofloat = true;
+			return 1;
+		} else {
 			cout << n->data->GetValue() << " ";
-		break;
-		default:
-			cout << n->data->GetName() << " ";
-		break;			
 		}
+	break;
+	default:
+		cout << n->data->GetName() << " ";
+	break;			
 	}
+
+	return 0;
 }
 
 static void preorder(struct node *n, char pos)
 {
-	if (n != NULL) {
-		if (pos == 'l') {
-			if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
-				cout << "[" << n->data->GetValue() << "]";
+	if (n == NULL)
+		return;
 
-			cout << "[" << n->data->GetName() << "]";
-		} else if (pos == 'r') {
-			if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
-				cout << "[" << n->data->GetValue() << "]";
+	if (pos == 'l') {
+		if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
+			cout << "[" << n->data->GetValue() << "]";
 
-			cout << "\t\t[" << n->data->GetName() << "]" << endl;
-		} else {
-			if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
-				cout << "[" << n->data->GetValue() << "]";
+		cout << "[" << n->data->GetName() << "]";
+	} else if (pos == 'r') {
+		if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
+			cout << "[" << n->data->GetValue() << "]";
 
-			cout << "\t[" << n->data->GetName() << "]" << endl;
-		}
+		cout << "\t\t[" << n->data->GetName() << "]" << endl;
+	} else {
+		if (n->data->GetTag() == INT || n->data->GetTag() == FLOAT)
+			cout << "[" << n->data->GetValue() << "]";
 
-		if (n->right != NULL && (n->right->left != NULL || n->right->right != NULL)) {
-			preorder(n->left, 'l');
-			preorder(n->right, 'b');
-		} else if (n->left != NULL && (n->left->left != NULL || n->left->right != NULL)) {
-			preorder(n->left, 'b');
-			preorder(n->right, 'r');
-		} else {
-			preorder(n->left, 'l');
-			preorder(n->right, 'r');
-		}
+		cout << "\t[" << n->data->GetName() << "]" << endl;
+	}
 
+	if (n->right != NULL && (n->right->left != NULL || n->right->right != NULL)) {
+		preorder(n->left, 'l');
+		preorder(n->right, 'b');
+	} else if (n->left != NULL && (n->left->left != NULL || n->left->right != NULL)) {
+		preorder(n->left, 'b');
+		preorder(n->right, 'r');
+	} else {
+		preorder(n->left, 'l');
+		preorder(n->right, 'r');
 	}
 }
 
