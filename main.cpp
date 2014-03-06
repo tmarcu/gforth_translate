@@ -69,11 +69,9 @@ static void postorder(struct node *n)
 	break;
 	case POWER:
 		if (tofloat == true)
-			cout << "f";
+			cout << "f** ";
 		else
 			cout << "ERROR: Cannot do '^' on integer values" << endl;
-
-		cout << "** ";
 	break;
 	default:
 		cout << n->data->GetName() << " ";
