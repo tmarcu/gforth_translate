@@ -2,16 +2,16 @@ CC=g++
 CFLAGS = -Wall -std=c++11
 
 translator: main.cpp token.o lexer.o parser.o
-	$(CC) -o translator main.cpp token.o lexer.o parser.o
+	$(CC) $(CFLAGS) -o translator main.cpp token.o lexer.o parser.o
 
 token.o: token.cpp token.h
-	$(CC) -c token.cpp
+	$(CC) $(CFLAGS) -c token.cpp
 
 lexer.o: lexer.cpp lexer.h
 	$(CC) $(CFLAGS) -c lexer.cpp
 
 parser.o: parser.cpp parser.h
-	$(CC) -c parser.cpp
+	$(CC) $(CFLAGS) -c parser.cpp
 
 stutest:
 	./translator < test1.ts > stutest1.out 2>&1

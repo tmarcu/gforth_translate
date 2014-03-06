@@ -14,7 +14,6 @@ using namespace std;
 
 bool tofloat = false;
 bool ifflag = false;
-bool concatop = false;
 
 static void CheckTypes(struct node *n)
 {
