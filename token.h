@@ -1,3 +1,8 @@
+/*
+ * token.h
+ * Copyright (C) 2014 Tudor Marcu. All rights reserved.
+ */
+
 #ifndef TOKEN_H
 #define TOKEN_H
 

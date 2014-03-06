@@ -1,3 +1,8 @@
+/*
+ * lexer.cpp
+ * Copyright (C) 2014 Tudor Marcu. All rights reserved.
+ */
+
 #include <iostream>
 #include <istream>
 #include <ostream>

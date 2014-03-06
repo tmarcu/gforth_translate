@@ -1,3 +1,8 @@
+/*
+ * main.cpp
+ * Copyright (C) 2014 Tudor Marcu. All rights reserved.
+ */
+
 #include <iostream>
 #include <list>
 #include <algorithm>

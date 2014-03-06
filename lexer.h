@@ -1,3 +1,8 @@
+/*
+ * lexer.h
+ * Copyright (C) 2014 Tudor Marcu. All rights reserved.
+ */
+
 #ifndef LEXER_H
 #define LEXER_H
 

@@ -1,3 +1,8 @@
+/*
+ * token_list.h
+ * Copyright (C) 2013 Tudor Marcu. All rights reserved.
+ */
+
 #ifndef TOKEN_LIST_H
 #define TOKEN_LIST_H
 

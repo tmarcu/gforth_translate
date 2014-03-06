@@ -1,3 +1,8 @@
+/*
+ * token.cpp
+ * Copyright (C) 2014 Tudor Marcu. All rights reserved.
+ */
+
 #include "token.h"
 
 Token::Token(enum tokens tag)

@@ -1,3 +1,8 @@
+/*
+ * parser.h
+ * Copyright (C) 2014 Tudor Marcu. All rights reserved.
+ */
+
 #ifndef PARSER_H
 #define PARSER_H
 
