@@ -256,6 +256,7 @@ void Lexer::CreateTable(void)
 	idhashtable.emplace("bool", BOOL);
 	idhashtable.emplace("tan", TAN);
 	idhashtable.emplace("print", PRINT);
+	idhashtable.emplace("concat", CONCAT);
 }
 
 void Lexer::CheckError(Token *t)

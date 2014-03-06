@@ -78,7 +78,8 @@ struct node *Parser::ParseBinary(enum tokens type)
 	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
 	    Expected(NAME) == 0) {
 		values[0] = BuildValueNode(prevtoken);
-		if (Expected(INT) == 0 || Expected(FLOAT) == 0) {
+		if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
+	 	    Expected(NAME) == 0) {
 			values[1] = BuildValueNode(prevtoken);
 			return BuildBinaryExpr(values, type);
 		} else if (Expected(LBRACKET) == 0) {
@@ -288,7 +289,7 @@ struct node *Parser::ProgramStart(void)
 		exit(EXIT_FAILURE);
 	}
 
-	std::cout << "DONE PARSING!" << std::endl;
+	std::cout << "**DONE PARSING!\n" << std::endl;
 
 	return return_val;
 }
@@ -304,7 +305,8 @@ struct node *Parser::ParseProgram(void)
 			Expected(MINUS) == 0|| Expected(DIVIDE) == 0 ||
 			Expected(COMPARE) == 0 || Expected(POWER) == 0 ||
 			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
-			|| Expected(LESSTHAN) == 0) {
+			|| Expected(LESSTHAN) == 0 || Expected(CONCAT) == 0) {
+			std::cout << "calling " << prevtoken->GetTag() << std::endl;
 		return_val =  ParseBinary(prevtoken->GetTag());
 	} else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
 			Expected(COS) == 0 || Expected(TAN) == 0) {

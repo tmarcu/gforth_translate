@@ -13,6 +13,7 @@
 using namespace std;
 
 bool tofloat = false;
+bool ifflag = false;
 
 static void CheckTypes(struct node *n)
 {
@@ -24,10 +25,10 @@ static void CheckTypes(struct node *n)
 
 	switch (n->data->GetTag()) {
 	case FLOAT:
-		if (tofloat != true) {
-			tofloat = true;
-			return;
-		} 
+		tofloat = true;
+	break;
+	case IF:
+		ifflag = true;
 	break;
 	default:
 	break;			
@@ -77,6 +78,19 @@ static void postorder(struct node *n)
 	default:
 		cout << n->data->GetName() << " ";
 	break;			
+	}
+}
+
+static void TraverseIf(struct node *n)
+{
+	if (n == NULL)
+		return;
+
+	if (n->data->GetTag() == IF) {
+		postorder(n->left);
+		cout << "if ";
+		postorder(n->right); cout << "else ";
+		postorder(n->mid); cout << "endif ;" << endl;
 	}
 }
 
@@ -137,11 +151,17 @@ int main(int argc, char *argv[])
 
 	struct node *list = parser.ProgramStart();
 
-	cout << "Postorder: " << endl;
+	cout << "Postorder (GForth Code): " << endl;
 
+	/* First pass checks types and sets appropriate flags */
 	CheckTypes(list);
 
-	postorder(list);
+	/* Second pass formats and translates according to flags set */
+	if (ifflag == true)
+		TraverseIf(list);
+
+	else
+		postorder(list);
 		
 	cout << endl;
 
