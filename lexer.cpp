@@ -164,8 +164,6 @@ Token *Lexer::CheckString(const char &c, char &next)
 {
 	string body;
 
-	body += c;
-
 	while(next != '"') {
 		if (next == -1)
 			return new Token(ERROR);
@@ -173,6 +171,7 @@ Token *Lexer::CheckString(const char &c, char &next)
 		next = readchar();
 	}
 
+	next = readchar();
 	return new Constant(body);
 }
 

@@ -76,10 +76,10 @@ struct node *Parser::ParseBinary(enum tokens type)
 
 	/* Handle binary math expressions */
 	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
-	    Expected(NAME) == 0) {
+	    Expected(NAME) == 0 || Expected(STRING) == 0) {
 		values[0] = BuildValueNode(prevtoken);
 		if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
-	 	    Expected(NAME) == 0) {
+	 	    Expected(NAME) == 0 || Expected(STRING) == 0) {
 			values[1] = BuildValueNode(prevtoken);
 			return BuildBinaryExpr(values, type);
 		} else if (Expected(LBRACKET) == 0) {
@@ -263,7 +263,7 @@ struct node *Parser::ParseUnary(enum tokens type)
 {
 	struct node *values[2] = {NULL};
 
-	if (Expected(INT) == 0) {
+	if (Expected(INT) == 0 || Expected(FLOAT) == 0) {
 		values[1] = BuildValueNode(prevtoken);
 	} else if (Expected(LBRACKET) == 0) {
 			values[1] = ParseProgram();
@@ -306,7 +306,6 @@ struct node *Parser::ParseProgram(void)
 			Expected(COMPARE) == 0 || Expected(POWER) == 0 ||
 			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
 			|| Expected(LESSTHAN) == 0 || Expected(CONCAT) == 0) {
-			std::cout << "calling " << prevtoken->GetTag() << std::endl;
 		return_val =  ParseBinary(prevtoken->GetTag());
 	} else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
 			Expected(COS) == 0 || Expected(TAN) == 0) {

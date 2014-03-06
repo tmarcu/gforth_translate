@@ -83,7 +83,7 @@ std::string Token::GetName(void)
 	case FLOAT:
 		return "float";
 	case STRING:
-		return "string";
+		return this->GetString();
 	case BOOL:
 		return "bool";
 	case NAME:
@@ -106,6 +106,8 @@ std::string Token::GetName(void)
 		return "cos";
 	case TAN:
 		return "tan";
+	case CONCAT:
+		return "concat";
 	case ERROR:
 		return "error"; 
 	default:

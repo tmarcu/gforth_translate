@@ -14,6 +14,7 @@ using namespace std;
 
 bool tofloat = false;
 bool ifflag = false;
+bool concatop = false;
 
 static void CheckTypes(struct node *n)
 {
@@ -41,6 +42,10 @@ static void postorder(struct node *n)
 	if (n == NULL)
 		return;
 
+	if (n->data->GetTag() == CONCAT) {
+		concatop = true;
+	}
+
 	postorder(n->left);
 	postorder(n->right);
 
@@ -52,7 +57,6 @@ static void postorder(struct node *n)
 	break;
 	case FLOAT:
 		if (tofloat != true) {
-			cout << "IN HERE" << endl;
 			tofloat = true;
 			return;
 		} else {
@@ -72,6 +76,11 @@ static void postorder(struct node *n)
 			cout << "f** ";
 		else
 			cout << "ERROR: Cannot do '^' on integer values" << endl;
+	break;
+	case STRING:
+		cout << n->data->GetString();
+		if (concatop != true)
+			cout << " ";
 	break;
 	default:
 		cout << n->data->GetName() << " ";
