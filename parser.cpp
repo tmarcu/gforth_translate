@@ -51,6 +51,7 @@ bool Parser::Expected(enum tokens t)
 struct node *Parser::BuildValueNode(Token *t)
 {
 	struct node *n = new struct node;
+
 	n->data = t;
 	n->left = NULL;
 	n->right = NULL;
@@ -61,9 +62,11 @@ struct node *Parser::BuildValueNode(Token *t)
 struct node *Parser::BuildBinaryExpr(struct node **v, enum tokens type)
 {
 	struct node *n = new struct node;
+
 	n->data = new Token(type);
 	n->left = v[0];
 	n->right = v[1];
+
 	return n;
 }
 

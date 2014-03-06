@@ -14,10 +14,31 @@ using namespace std;
 
 bool tofloat = false;
 
-static int postorder(struct node *n)
+static void CheckTypes(struct node *n)
 {
 	if (n == NULL)
-		return -1;
+		return;
+
+	CheckTypes(n->left);
+	CheckTypes(n->right);
+
+	switch (n->data->GetTag()) {
+	case FLOAT:
+		if (tofloat != true) {
+			tofloat = true;
+			return;
+		} 
+	break;
+	default:
+	break;			
+	}
+}
+
+
+static void postorder(struct node *n)
+{
+	if (n == NULL)
+		return;
 
 	postorder(n->left);
 	postorder(n->right);
@@ -25,21 +46,38 @@ static int postorder(struct node *n)
 	switch (n->data->GetTag()) {
 	case INT:
 		cout << n->data->GetValue() << " ";
+		if (tofloat == true)
+			cout << "s>f ";
 	break;
 	case FLOAT:
 		if (tofloat != true) {
+			cout << "IN HERE" << endl;
 			tofloat = true;
-			return 1;
+			return;
 		} else {
-			cout << n->data->GetValue() << " ";
+			cout << n->data->GetValue() << "e ";
 		}
+	break;
+	case PLUS:
+	case MINUS:
+	case MULTIPLY:
+	case DIVIDE:
+		if (tofloat == true)
+			cout << "f";
+		cout << n->data->GetName() << " ";
+	break;
+	case POWER:
+		if (tofloat == true)
+			cout << "f";
+		else
+			cout << "ERROR: Cannot do '^' on integer values" << endl;
+
+		cout << "** ";
 	break;
 	default:
 		cout << n->data->GetName() << " ";
 	break;			
 	}
-
-	return 0;
 }
 
 static void preorder(struct node *n, char pos)
@@ -101,12 +139,10 @@ int main(int argc, char *argv[])
 
 	cout << "Postorder: " << endl;
 
-	while (postorder(list) != 0) {
-		++i;
-		cout << "pass: " << i<< endl;
-		postorder(list);
-	}
+	CheckTypes(list);
 
+	postorder(list);
+		
 	cout << endl;
 
 	cout << "Preorder (Tree Diagram): " << endl;
