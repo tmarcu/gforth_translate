@@ -42,10 +42,6 @@ static void postorder(struct node *n)
 	if (n == NULL)
 		return;
 
-	if (n->data->GetTag() == CONCAT) {
-		concatop = true;
-	}
-
 	postorder(n->left);
 	postorder(n->right);
 
@@ -78,9 +74,10 @@ static void postorder(struct node *n)
 			cout << "ERROR: Cannot do '^' on integer values" << endl;
 	break;
 	case STRING:
-		cout << n->data->GetString();
-		if (concatop != true)
-			cout << " ";
+		cout << "s\" " << n->data->GetString() << "\" ";
+	break;
+	case CONCAT:
+		cout << "append";
 	break;
 	default:
 		cout << n->data->GetName() << " ";
@@ -141,7 +138,6 @@ int main(int argc, char *argv[])
 	string input;
 	char c;
 	char next;
-	int i = 0;
 	Token *tok;
 	Lexer scanner = Lexer();
 	Parser parser = Parser();
