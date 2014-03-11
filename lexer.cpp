@@ -55,6 +55,8 @@ Token *Lexer::CheckUnaryOp(const char &c)
 			return new Operator(GREATERTHAN);
 		case '<':
 			return new Operator(LESSTHAN);
+		case '/':
+			return new Operator(DIVIDE);
 		default:
 			return new Token(ERROR);
 	}

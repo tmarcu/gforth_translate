@@ -79,7 +79,13 @@ static void postorder(struct node *n)
 		cout << "append";
 	break;
 	case COS:
-		cout << "cos ";
+		cout << "fcos ";
+	break;
+	case SIN:
+		cout << "fsin ";
+	break;
+	case TAN:
+		cout << "ftan ";
 	break;
 	case EQUAL:
 		cout << "! ";
