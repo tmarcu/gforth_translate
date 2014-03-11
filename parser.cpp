@@ -89,15 +89,15 @@ struct node *Parser::ParseBinary(enum tokens type)
 	}
 
 	/* Handle assignment */
-	if (type == EQUAL) {
+	if (Expected(EQUAL) == 0) {
 		if (Expected(NAME) == 0) {
-			values[0] = BuildValueNode(prevtoken);
+			values[1] = BuildValueNode(prevtoken);
 			if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
 			    Expected(STRING) == 0) {
-				values[1] = BuildValueNode(prevtoken);
+				values[0] = BuildValueNode(prevtoken);
 				return BuildBinaryExpr(values, type);
 			} else if (Expected(LBRACKET) == 0) {
-				values[1] = ParseProgram();
+				values[0] = ParseProgram();
 				return BuildBinaryExpr(values, type);
 			}
 		}
@@ -183,10 +183,6 @@ struct node *Parser::CheckVarExpr(enum tokens type)
 	struct node *values[2] = {NULL};
 	struct node *return_val = NULL;
 
-	if (Expected(LBRACKET)) {
-			std::cerr << "Error: Missing '[' after 'let'" << std::endl;
-			exit(EXIT_FAILURE);
-	}
 
 	/* The first part of varlist should be name */
 	if (Expected(NAME)) {
@@ -265,6 +261,7 @@ struct node *Parser::ParseUnary(enum tokens type)
 
 	if (Expected(INT) == 0 || Expected(FLOAT) == 0) {
 		values[1] = BuildValueNode(prevtoken);
+		return BuildBinaryExpr(values, type);
 	} else if (Expected(LBRACKET) == 0) {
 			values[1] = ParseProgram();
 			return BuildBinaryExpr(values, type);

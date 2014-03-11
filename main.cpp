@@ -78,6 +78,12 @@ static void postorder(struct node *n)
 	case CONCAT:
 		cout << "append";
 	break;
+	case COS:
+		cout << "cos ";
+	break;
+	case EQUAL:
+		cout << "! ";
+	break;
 	default:
 		cout << n->data->GetName() << " ";
 	break;			

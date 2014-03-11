@@ -72,8 +72,9 @@ Token *Lexer::check_binary_ops(const char &c, const char &next)
 					return new Operator(GREATEREQUAL);
 				else if (c == '!')
 					return new Operator(NOTEQUAL);
-				else if (c == ':')
+				else if (c == ':') {
 					return new Operator(EQUAL);
+				}
 			break;
 			default:
 				return CheckUnaryOp(c);
