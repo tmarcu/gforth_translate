@@ -38,6 +38,8 @@ static void CheckTypes(struct node *n)
 
 static void postorder(struct node *n)
 {
+	float numsize = 0;
+
 	if (n == NULL)
 		return;
 
@@ -46,17 +48,21 @@ static void postorder(struct node *n)
 
 	switch (n->data->GetTag()) {
 	case INT:
-		cout << n->data->GetValue() << " ";
+		numsize = n->data->GetValue();
+		cout << numsize << " ";
 		if (tofloat == true)
 			cout << "s>f ";
 	break;
 	case FLOAT:
-		if (tofloat != true) {
-			tofloat = true;
-			return;
-		} else {
-			cout << n->data->GetValue() << "e ";
-		}
+		numsize = n->data->GetValue();
+
+		cout << numsize;
+		if (numsize < 999999)
+			cout << " ";
+		else if (tofloat == false)
+			cout << "e ";
+		else
+			cout << " ";
 	break;
 	case PLUS:
 	case MINUS:
