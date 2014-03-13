@@ -69,9 +69,9 @@ Token *Lexer::check_binary_ops(const char &c, const char &next)
 	if (next != c) {
 		switch(next) {
 			case '=':
-				if (c == '<')
+				if (c == '<') {
 					return new Operator(LESSEQUAL);
-				else if (c == '>')
+				}else if (c == '>')
 					return new Operator(GREATEREQUAL);
 				else if (c == '!')
 					return new Operator(NOTEQUAL);

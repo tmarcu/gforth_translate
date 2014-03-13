@@ -74,6 +74,9 @@ struct node *Parser::ParseBinary(enum tokens type)
 {
 	struct node *values[2] = {NULL};
 
+	if (prevtoken->GetTag() == LESSEQUAL)
+		NextToken();
+
 	/* Handle binary math expressions */
 	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
 	    Expected(NAME) == 0 || Expected(STRING) == 0) {
@@ -302,7 +305,8 @@ struct node *Parser::ParseProgram(void)
 			Expected(MINUS) == 0|| Expected(DIVIDE) == 0 ||
 			Expected(COMPARE) == 0 || Expected(POWER) == 0 ||
 			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
-			|| Expected(LESSTHAN) == 0 || Expected(CONCAT) == 0) {
+			|| Expected(LESSEQUAL) == 0 || Expected(GREATEREQUAL) == 0 ||
+			Expected(LESSTHAN) == 0 || Expected(CONCAT) == 0) {
 		return_val =  ParseBinary(prevtoken->GetTag());
 	} else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
 			Expected(COS) == 0 || Expected(TAN) == 0) {
