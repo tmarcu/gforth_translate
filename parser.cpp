@@ -72,7 +72,7 @@ struct node *Parser::BuildBinaryExpr(struct node **v, enum tokens type)
 
 struct node *Parser::ParseBinary(enum tokens type)
 {
-	struct node *values[2] = {NULL};
+	struct node *values[2] = {NULL};	
 
 	if (prevtoken->GetTag() == LESSEQUAL)
 		NextToken();
@@ -88,6 +88,10 @@ struct node *Parser::ParseBinary(enum tokens type)
 		} else if (Expected(LBRACKET) == 0) {
 			values[1] = ParseProgram();
 			return BuildBinaryExpr(values, type);
+		} else if (Expected(RBRACKET) == 0) {
+			values[1] = values[0];
+			values[0] = NULL;
+			return BuildBinaryExpr(values, NEGATE);
 		}
 	}
 

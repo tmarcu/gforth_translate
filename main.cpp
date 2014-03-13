@@ -59,7 +59,7 @@ static void postorder(struct node *n)
 		cout << numsize;
 		if (numsize > 999999)
 			cout << " ";
-		if (tofloat != false && numsize < 999999)
+		if (tofloat != false && numsize < 999999 && numsize > 0.0001)
 			cout << "e ";
 		else
 			cout << " ";
@@ -95,6 +95,12 @@ static void postorder(struct node *n)
 	break;
 	case EQUAL:
 		cout << "! ";
+	break;
+	case NEGATE:
+		if (tofloat == true)
+			cout << "fnegate ";
+		else
+			cout << "negate ";
 	break;
 	default:
 		cout << n->data->GetName() << " ";
