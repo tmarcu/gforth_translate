@@ -57,9 +57,9 @@ static void postorder(struct node *n)
 		numsize = n->data->GetValue();
 
 		cout << numsize;
-		if (numsize < 999999)
+		if (numsize > 999999)
 			cout << " ";
-		else if (tofloat == false)
+		if (tofloat != false && numsize < 999999)
 			cout << "e ";
 		else
 			cout << " ";

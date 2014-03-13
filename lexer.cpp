@@ -6,6 +6,7 @@
 #include <iostream>
 #include <istream>
 #include <ostream>
+#include <cmath>
 #include <string>
 #include <cstdlib>
 #include <unordered_map>
@@ -111,7 +112,9 @@ Token *Lexer::check_binary_ops(const char &c, const char &next)
 Token *Lexer::GetNum(const char &c, char &next)
 {
 	string num;
+	string power;
 	bool isfloat = false;
+	int neg = 1;
 
 	num += c;
 	while(isdigit(next)) {
@@ -133,10 +136,19 @@ Token *Lexer::GetNum(const char &c, char &next)
 	if (next == 'e') {
 		isfloat = true;
 		next = readchar();
+		if (next == '-') {
+			neg = -1;
+			next = readchar();
+		}
+
+		while(isdigit(next)) {
+			power += next;
+			next = readchar();
+		}
 	}
 		
 	if (isfloat == true)
-		return new Constant((float) atof(num.c_str()));
+		return new Constant((float) atof(num.c_str()) *(float) pow(10, neg * atoi(power.c_str())));
 
 	return new Constant(atoi(num.c_str()));
 }
