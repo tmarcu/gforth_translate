@@ -74,7 +74,7 @@ struct node *Parser::ParseBinary(enum tokens type)
 {
 	struct node *values[2] = {NULL};	
 
-	if (prevtoken->GetTag() == LESSEQUAL)
+	if (prevtoken->GetTag() == LESSEQUAL || prevtoken->GetTag() == GREATEREQUAL)
 		NextToken();
 
 	/* Handle binary math expressions */
@@ -156,7 +156,7 @@ struct node *Parser::CheckWhile(enum tokens type)
 	if (Expected(LBRACKET) == 0) {
 		values[0] = ParseProgram();
 
-		/* Expression should be closed, end w/error otherwise */
+		/* Expression should be chttps://www.youtube.com/watch?feature=player_embedded&v=ytRDyRvN6gklosed, end w/error otherwise */
 		if (Expected(RBRACKET)) {
 			std::cerr << "Error: Missing closing ']' in expr" << std::endl;
 			return NULL;
@@ -190,19 +190,23 @@ struct node *Parser::CheckVarExpr(enum tokens type)
 	struct node *values[2] = {NULL};
 	struct node *return_val = NULL;
 
-
+	if (Expected(LBRACKET)) {
+		std::cerr << "Error: Missing '[' in varlist" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	/* The first part of varlist should be name */
 	if (Expected(NAME)) {
 		std::cerr << "Error: Missing variable" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
-	values[0] = BuildValueNode(prevtoken);
+	values[1] = BuildValueNode(prevtoken);
 
-	if (Expected(INT) == 0 || Expected(FLOAT) == 0 ||
+	if (Expected(INTEGER) == 0 || Expected(FLOATVAR) == 0 ||
 	    Expected(BOOL) == 0 || Expected(STRING) == 0) {
-		values[1] = BuildValueNode(prevtoken);
-		return_val = BuildBinaryExpr(values, LET);
+		prevtoken->SetTag(VARIABLE);
+		values[0] = BuildValueNode(prevtoken);
+		return_val = BuildBinaryExpr(values, EMPTY);
 	}
 
 	if (Expected(RBRACKET)) {

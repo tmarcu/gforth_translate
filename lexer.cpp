@@ -117,6 +117,10 @@ Token *Lexer::GetNum(const char &c, char &next)
 	int neg = 1;
 
 	num += c;
+
+	if (c == '.')
+		std::cout << c << "asdfas " << next << std::endl;
+
 	while(isdigit(next)) {
 		num += next;
 		next = readchar();
@@ -146,7 +150,8 @@ Token *Lexer::GetNum(const char &c, char &next)
 			next = readchar();
 		}
 	}
-		
+	std::cout << " FINAL" << num << std::endl;
+
 	if (isfloat == true)
 		return new Constant((float) atof(num.c_str()) *(float) pow(10, neg * atoi(power.c_str())));
 
@@ -264,8 +269,8 @@ void Lexer::CreateTable(void)
 	idhashtable.emplace("and", AND);
 	idhashtable.emplace("sin", SIN);
 	idhashtable.emplace("cos", COS);
-	idhashtable.emplace("int", INT);
-	idhashtable.emplace("float", FLOAT);
+	idhashtable.emplace("int", INTEGER);
+	idhashtable.emplace("float", FLOATVAR);
 	idhashtable.emplace("string", STRING);
 	idhashtable.emplace("bool", BOOL);
 	idhashtable.emplace("tan", TAN);

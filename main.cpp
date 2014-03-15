@@ -64,6 +64,9 @@ static void postorder(struct node *n)
 		else
 			cout << " ";
 	break;
+	case INTEGER:
+		cout  << "[INT] ";
+	break;
 	case PLUS:
 	case MINUS:
 	case MULTIPLY:
@@ -101,6 +104,11 @@ static void postorder(struct node *n)
 			cout << "fnegate ";
 		else
 			cout << "negate ";
+	break;
+	case VARIABLE:
+		cout << "VARIABLE ";
+	case EMPTY:
+		cout << " ";
 	break;
 	default:
 		cout << n->data->GetName() << " ";
