@@ -170,7 +170,7 @@ Token *Lexer::CheckIdentifier(const char &c, char & next)
 
 	/* Check if exists otherwise add to table */
 	if (idhashtable.find(identifier) == idhashtable.end()) {
-		idhashtable.emplace(identifier, NAME);
+		idhashtable.insert(std::make_pair(identifier, NAME));
 		return new Name(identifier);
 	} else {
 		return new Name(idhashtable[identifier]);
@@ -261,20 +261,20 @@ Token *Lexer::ScanToken(char &c, char &next)
 
 void Lexer::CreateTable(void)
 {
-	idhashtable.emplace("if", IF);
-	idhashtable.emplace("let", LET);
-	idhashtable.emplace("or", OR);
-	idhashtable.emplace("while", WHILE);
-	idhashtable.emplace("and", AND);
-	idhashtable.emplace("sin", SIN);
-	idhashtable.emplace("cos", COS);
-	idhashtable.emplace("int", INTEGER);
-	idhashtable.emplace("float", FLOATVAR);
-	idhashtable.emplace("string", STRING);
-	idhashtable.emplace("bool", BOOL);
-	idhashtable.emplace("tan", TAN);
-	idhashtable.emplace("stdout", PRINT);
-	idhashtable.emplace("concat", CONCAT);
+	idhashtable.insert(std::make_pair("if", IF));
+	idhashtable.insert(std::make_pair("let", LET));
+	idhashtable.insert(std::make_pair("or", OR));
+	idhashtable.insert(std::make_pair("while", WHILE));
+	idhashtable.insert(std::make_pair("and", AND));
+	idhashtable.insert(std::make_pair("sin", SIN));
+	idhashtable.insert(std::make_pair("cos", COS));
+	idhashtable.insert(std::make_pair("int", INTEGER));
+	idhashtable.insert(std::make_pair("float", FLOATVAR));
+	idhashtable.insert(std::make_pair("string", STRING));
+	idhashtable.insert(std::make_pair("bool", BOOL));
+	idhashtable.insert(std::make_pair("tan", TAN));
+	idhashtable.insert(std::make_pair("stdout", PRINT));
+	idhashtable.insert(std::make_pair("concat", CONCAT));
 }
 
 void Lexer::CheckError(Token *t)
