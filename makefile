@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS = -Wall -std=c++11
+CFLAGS = -Wall -std=c++0x
 
 translator: main.cpp token.o lexer.o parser.o
 	$(CC) $(CFLAGS) -o translator main.cpp token.o lexer.o parser.o

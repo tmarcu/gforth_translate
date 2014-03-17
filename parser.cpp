@@ -11,6 +11,8 @@
 #include "token_list.h"
 #include "parser.h"
 
+bool print_flag = false;
+
 void Parser::NextToken(void)
 {
 	prevtoken = tok;
@@ -129,6 +131,9 @@ struct node *Parser::CheckIf(enum tokens type)
 
 		/* Handle second expression */
 		if (Expected(LBRACKET) == 0) {
+			if (Expected(PRINT) == 0) /* continue */
+			
+
 			values[1] = ParseProgram();
 			return_val = BuildBinaryExpr(values, type);
 
@@ -139,6 +144,8 @@ struct node *Parser::CheckIf(enum tokens type)
 		}
 
 		if (Expected(LBRACKET) == 0) {
+			if (Expected(PRINT) == 0)
+				print_flag = true;
 			return_val->mid = ParseProgram();
 		}
 
@@ -156,7 +163,7 @@ struct node *Parser::CheckWhile(enum tokens type)
 	if (Expected(LBRACKET) == 0) {
 		values[0] = ParseProgram();
 
-		/* Expression should be chttps://www.youtube.com/watch?feature=player_embedded&v=ytRDyRvN6gklosed, end w/error otherwise */
+		/* Expression should be closed, end w/error otherwise */
 		if (Expected(RBRACKET)) {
 			std::cerr << "Error: Missing closing ']' in expr" << std::endl;
 			return NULL;
@@ -175,7 +182,6 @@ struct node *Parser::CheckWhile(enum tokens type)
 
 		/* Handle expression lists and keep iterating */
 		while (Expected(LBRACKET) == 0) {
-			std::cout << "new expr" << std::endl;
 			return_val->mid = ParseProgram();
 		}
 
@@ -251,6 +257,10 @@ struct node *Parser::ParseStmnt(enum tokens type)
 	case LET:
 		return_val = CheckLet(type);
 	break;
+	case PRINT:
+		print_flag = true;
+		return ParseProgram();
+	break;
 	default:
 	break;
 	}
@@ -284,6 +294,7 @@ struct node *Parser::ParseUnary(enum tokens type)
 struct node *Parser::ProgramStart(void)
 {
 	struct node *return_val;
+	struct node *code;
 
 	if (Expected(LBRACKET)) {
 		std::cerr << "Error: Unexpected character, missing '['" << std::endl;
@@ -297,7 +308,13 @@ struct node *Parser::ProgramStart(void)
 		exit(EXIT_FAILURE);
 	}
 
-	std::cout << "**DONE PARSING!\n" << std::endl;
+	//std::cout << "**DONE PARSING!\n" << std::endl;
+
+	if (print_flag == true) {
+		code = BuildValueNode(new Token(PRINT));
+		code->right = return_val;
+		return code;
+	}
 
 	return return_val;
 }
@@ -312,9 +329,10 @@ struct node *Parser::ParseProgram(void)
 	} else if (Expected(MULTIPLY) == 0 || Expected(PLUS) == 0 ||
 			Expected(MINUS) == 0|| Expected(DIVIDE) == 0 ||
 			Expected(COMPARE) == 0 || Expected(POWER) == 0 ||
-			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0
-			|| Expected(LESSEQUAL) == 0 || Expected(GREATEREQUAL) == 0 ||
-			Expected(LESSTHAN) == 0 || Expected(CONCAT) == 0) {
+			Expected(EQUAL) == 0 || Expected(GREATERTHAN) == 0 ||
+			Expected(LESSEQUAL) == 0 || Expected(GREATEREQUAL) == 0 ||
+			Expected(LESSTHAN) == 0 || Expected(CONCAT) == 0 ||
+			Expected(OR) == 0 || Expected(AND) == 0) {
 		return_val =  ParseBinary(prevtoken->GetTag());
 	} else if (Expected(NOT) == 0 || Expected(SIN) == 0 ||
 			Expected(COS) == 0 || Expected(TAN) == 0) {

@@ -107,6 +107,18 @@ static void postorder(struct node *n)
 	break;
 	case VARIABLE:
 		cout << "VARIABLE ";
+	break;
+	case OR:
+		cout << "or ";
+	break;
+	case AND:
+		cout << "and ";
+	break;
+	case PRINT:
+		if (tofloat == true)
+			cout << "f";
+		cout << ". ";
+	break;
 	case EMPTY:
 		cout << " ";
 	break;
@@ -122,10 +134,13 @@ static void TraverseIf(struct node *n)
 		return;
 
 	if (n->data->GetTag() == IF) {
+		cout << ": func ";
 		postorder(n->left);
 		cout << "if ";
-		postorder(n->right); cout << "else ";
-		postorder(n->mid); cout << "endif ;" << endl;
+		postorder(n->right);
+		cout << "else ";
+		postorder(n->mid);
+		cout << "endif ;" << endl;
 	}
 }
 
@@ -179,13 +194,10 @@ int main(int argc, char *argv[])
 		tok = scanner.ScanToken(c, next);
 		scanner.CheckError(tok);
 		parser.AddToken(tok);
-		cout << c << " " << tok->GetTag() << endl;
 		c = next;
 	}
 
 	struct node *list = parser.ProgramStart();
-
-	cout << "Postorder (GForth Code): " << endl;
 
 	/* First pass checks types and sets appropriate flags */
 	CheckTypes(list);
@@ -197,11 +209,7 @@ int main(int argc, char *argv[])
 	else
 		postorder(list);
 		
-	cout << endl;
-
-	cout << "Preorder (Tree Diagram): " << endl;
-
-	preorder(list, 'b');
+	cout << "\n" << endl;
 
 	return 0;
 }
